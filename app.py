@@ -7,7 +7,7 @@ os.environ["GROQ_API_KEY"] = "gsk_LJqnYyzRkt8EoZQ3JIOXWGdyb3FYm78MTqq3HDv5LIIzJj
 import streamlit as st
 from groq import Groq
 
-client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+client = Groq(api_key="")
 
 st.set_page_config(page_title="Generateur de Recettes IA", page_icon="🍽️")
 st.title("🍽️ Generateur de Recettes avec IA")
