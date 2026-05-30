@@ -1,9 +1,3 @@
-import sys
-import os
-sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
-os.environ["PYTHONIOENCODING"] = "utf-8"
-os.environ["GROQ_API_KEY"] = "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"
-
 import streamlit as st
 from groq import Groq
 
@@ -26,7 +20,6 @@ with st.form("recette_form"):
         regime = st.selectbox("Regime", ["Aucun", "Vegetarien", "Vegan", "Sans gluten"])
     with col3:
         cuisine = st.selectbox("Cuisine", ["Libre", "Francaise", "Italienne", "Asiatique", "Maghrebine"])
-    
     submitted = st.form_submit_button("Generer la recette", use_container_width=True)
 
 if submitted:
@@ -36,37 +29,31 @@ if submitted:
         with st.spinner("L'IA prepare ta recette..."):
             prompt = (
                 "Tu es un chef cuisinier expert. Genere une recette complete en francais.\n"
-                "Ingredients disponibles : " + str(ingredients) + "\n"
-                "Nombre de personnes : " + str(personnes) + "\n"
-                "Regime alimentaire : " + str(regime) + "\n"
-                "Type de cuisine : " + str(cuisine) + "\n\n"
-                "Reponds avec ce format :\n"
+                "Ingredients : " + str(ingredients) + "\n"
+                "Personnes : " + str(personnes) + "\n"
+                "Regime : " + str(regime) + "\n"
+                "Cuisine : " + str(cuisine) + "\n\n"
+                "Format:\n"
                 "## Nom de la recette\n"
                 "Temps de preparation : X minutes\n"
                 "Temps de cuisson : X minutes\n"
                 "Difficulte : Facile / Moyen / Difficile\n\n"
                 "## Ingredients\n"
-                "(liste avec quantites)\n\n"
-                "## Etapes de preparation\n"
-                "(etapes numerotees)\n\n"
-                "## Conseil du chef\n"
-                "(une astuce)"
+                "## Etapes\n"
+                "## Conseil du chef"
             )
-
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.7,
                 max_tokens=1024,
             )
-            
             recette = response.choices[0].message.content
             st.success("Recette generee !")
             st.markdown(recette)
-            
             st.download_button(
                 label="Telecharger la recette",
                 data=recette.encode("utf-8"),
-                file_name="ma_recette.txt",
+                file_name="recette.txt",
                 mime="text/plain"
             )
